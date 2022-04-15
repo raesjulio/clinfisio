@@ -17,8 +17,6 @@ export default function Painel() {
     const session = supabase.auth.session()
     if (session?.expires_at > new Date().getTime() || !session) {
       authLogin(router)
-
-      
     }
   }
   useEffect(() => {

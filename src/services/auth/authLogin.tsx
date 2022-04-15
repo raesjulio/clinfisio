@@ -5,5 +5,4 @@ export default (router:  NextRouter) => {
     return router.push({
         pathname: '/login'
     });
-
 }
