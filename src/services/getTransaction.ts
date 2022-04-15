@@ -1,8 +1,9 @@
 import axios from "axios"
 import { useQuery } from "react-query"
+import { api } from "./api"
 
 const resposeTransaction = async () => {
-    return await axios.get("http://localhost:3000/api/listtrasaction").then(item => {
+    return await api.get("/listtrasaction").then(item => {
         return item.data
     })
 
