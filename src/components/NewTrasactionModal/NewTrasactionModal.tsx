@@ -4,6 +4,7 @@ import ReactModal from "react-modal"
 import { ITransaction } from "../../interface/interfaces"
 import { api } from "../../services/api"
 import { queryClient } from "../../services/queryClient"
+import { Spinner } from "../Spinner/Spinner"
 import styles from "./styles.module.scss"
 interface Props {
     isOpen: boolean
@@ -28,8 +29,17 @@ export const NewTrasactionModal = (props: Props) => {
     const [type, setType] = useState(false)
     const [values, setValues] = useState<IValuesTransactionModal>(initialValues)
     const [error, setError] = useState(false)
+    const [valueIsEmpty, setValueIsEmpty] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
+
+
     const handleCreateNewTransaction = async (e: FormEvent) => {
         e.preventDefault()
+        if (values.title==="" || values.price ==="") {
+           setValueIsEmpty(true)
+            return
+        }
+        // setIsOpen(true)
         const objSend = {
             ...values,
             price: values.price.replace(/[^0-9]/g, ''),
@@ -39,38 +49,59 @@ export const NewTrasactionModal = (props: Props) => {
         const response = await api
             .post("/newtransaction", objSend)
             .then(item => item.data)
-            .catch(()=>setError(true))
+            .catch(() => setError(true))
         if (response) {
             arrayTransaction = [...arrayTransaction, response[0]]
             queryClient.setQueryData("list", arrayTransaction)
             setValues(initialValues)
+            closeSpinner()
             return props.onRequestClose()
         }
-
     }
-    const onChangeInputs = (e: ChangeEvent<HTMLInputElement>| ChangeEvent<HTMLTextAreaElement>) => {
+    const closeSpinner =()=>{
+        setIsOpen(false)
+    }
+    const onChangeInputs = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target
+        if (values.title!== "") {
+            setValueIsEmpty(false)
+
+        }
         if (name === "price") {
             return setValues({ ...values, [name]: new Intl.NumberFormat("pt-BR", { style: 'currency', currency: 'BRL' }).format(Number(value.replace(/[^0-9]/g, '')) / 100) })
         }
         setValues({ ...values, [name]: value })
     }
-
+    const onRequestClosed =()=>{
+        setValues(initialValues)
+return props.onRequestClose()
+    }
     return (
         <ReactModal
             isOpen={props.isOpen}
-            onRequestClose={props.onRequestClose}
+            onRequestClose={onRequestClosed}
             overlayClassName={`${styles.modalOverlay}`}
             className={`${styles.modalContent}`}
         >
+            <Spinner isOpen={isOpen} />
             <button
                 className={styles.modalClose}
                 type="button"
-                onClick={props.onRequestClose}>
+                onClick={onRequestClosed}>
                 <img src="/images/close.svg" alt="fechar modal" />
             </button>
             <form className={styles.container} onSubmit={handleCreateNewTransaction}>
                 <h2>Cadastar Transação</h2>
+                {error && <section className='__error'>
+                    <h3>
+                       {"Erro ao cadastar transação"}
+                    </h3>
+                </section>}
+                {valueIsEmpty && <section className='__error'>
+                    <h3>
+                       {"Preencha os campos de Titulo e Preço"}
+                    </h3>
+                </section>}
                 <input
                     type="text"
                     name="title"
@@ -83,7 +114,7 @@ export const NewTrasactionModal = (props: Props) => {
                     value={values.price.toString()}
                     onChange={e => onChangeInputs(e)}
                     placeholder="Valor" />
-                    <div className={styles.typeTransaction}>
+                <div className={styles.typeTransaction}>
                     <button
                         className={type ? styles.deposit : ""}
                         type="button"
@@ -100,12 +131,12 @@ export const NewTrasactionModal = (props: Props) => {
                     </button>
                 </div>
                 <textarea
-                    
+
                     name="description"
                     value={values.description}
                     onChange={e => onChangeInputs(e)}
                     placeholder="Descrição" />
-                
+
                 <button type="submit">Cadastrar</button>
             </form>
         </ReactModal>

@@ -21,6 +21,7 @@ const initialValues = () => {
         created_at: ""
     }
 }
+ReactModal.setAppElement("#__next")
 
 export const TransactionModal = ({ isOpen, setModal, transaction }: ITransactionModal) => {
 
@@ -70,6 +71,11 @@ export const TransactionModal = ({ isOpen, setModal, transaction }: ITransaction
             </button>
             <form className={styles.container} onSubmit={handleCreateNewTransaction}>
                 <h2>Informação da transação</h2>
+                {error && <section className='__error'>
+                    <h3>
+                       {"Erro ao deletar transação"}
+                    </h3>
+                </section>}
                 <input
                     type="text"
                     name="title"
