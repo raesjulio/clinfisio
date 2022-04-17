@@ -5,8 +5,8 @@ import styles from "./styles.module.scss"
 
 export const Summary = () => {
   const prev = queryClient.getQueryData<ITransaction[]>("list")
-  const [entrada, setEntrada] = useState(0)
-  const [saida, setSaida] = useState(0)
+  const [entrada, setEntrada] = useState("R$ 0")
+  const [saida, setSaida] = useState("R$ 0")
   const [total, setTotal] = useState(0)
  
   useEffect(() => {
@@ -18,8 +18,11 @@ export const Summary = () => {
         }
         return outValue = outValue + item.price
       })
-      setEntrada(inValue / 100)
-      setSaida(outValue / 100)
+      
+      let inV =new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(inValue/100)
+      setEntrada(inV)
+      let out =new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(outValue/100)
+      setSaida(out)
       setTotal((inValue - outValue) / 100)
     }
   }, [prev])
@@ -30,7 +33,7 @@ export const Summary = () => {
           <p>Entradas</p>
           <img src="/images/income.svg" alt="Entradas" />
         </header>
-        <strong className={styles.deposit}>{new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(entrada)}</strong>
+        <strong className={styles.deposit}>{entrada}</strong>
         <label>Ultima entrada dia 13</label>
       </div>
       <div>
@@ -38,10 +41,10 @@ export const Summary = () => {
           <p>Saidas</p>
           <img src="/images/outcome.svg" alt="Saidas" />
         </header>
-        <strong className={styles.withraw}>- {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(saida)}</strong>
+        <strong className={styles.withraw}>- {saida}</strong>
         <label>Ultima saida dia 13</label>
       </div>
-      <div className={styles.total}>
+      <div className={styles.total} style={total< 0 ? {background:"var(--red)", color:"var(--shape)"}: {}}>
         <header>
           <p>Total</p>
           <img src="/images/total.svg" alt="Total" />
