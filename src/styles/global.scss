@@ -55,14 +55,75 @@ button {
   cursor: not-allowed;
 }
 .__main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
   > img {
     max-width: 500px;
     padding: 0 1rem;
     width: 100%;
+  }
+}
+.__login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  div {
+    display: flex;
+    justify-content: center;
+    padding: 0 2rem;
+    img {
+      max-width: 24rem;
+      padding: 1rem 1.5rem;
+    }
+  }
+  form {
+    display: grid;
+    gap: 1rem;
+
+    input {
+      width: 100%;
+      padding: 0 1.5rem;
+      height: 4rem;
+      border-radius: 0.25rem;
+
+      border: 1px solid #d7d7d7;
+      background: var(--shape);
+      font-weight: 400;
+      font-size: 1rem;
+
+      &::placeholder {
+        color: var(--text-body);
+      }
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 0 1.5rem;
+      height: 4rem;
+      background: var(--green);
+      color: var(--shape);
+      border-radius: 0.25rem;
+      border: 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+  }
+}
+.__error {
+  padding: 0.5rem;
+  margin: auto;
+  width: 100%;
+  border-radius: 0.24rem;
+  background: var(--red);
+  color: var(--shape);
+  border: 1px solid var(--red) !important;
+  h3 {
+    text-align: center;
   }
 }
