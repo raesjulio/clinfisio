@@ -9,29 +9,24 @@ export const GroupButtons = () => {
         { name: "Dia", id: 3 },
     ]
     const [valueGroup, setValueGroup] = useState(1)
-    console.log(valueGroup);
 
     return (
         <aside className={styles.group}>
-
             {grupButtons.map(item => {
                 return <>
-                    <input
+                    <input 
                         value={item.id}
-                        
+                        key={item.id+item.name}
                         checked={valueGroup === item.id}
                         type="checkbox"
                         name={item.name}
                         id={item.name}
                         onChange={(e) => setValueGroup(Number(e.target.value))} />
                     <label 
-                    className={valueGroup === item.id ? styles.checked: ""}
+                        className={valueGroup === item.id ? styles.checked: ""}
                     htmlFor={item.name}>{item.name}</label>
                 </>
             })}
-
-
-
         </aside>
     )
 }

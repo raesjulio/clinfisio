@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react"
 import { ITransaction } from "../../interface/interfaces"
+import getDateTransaction from "../../services/getDateTransaction"
 import { queryClient } from "../../services/queryClient"
 import styles from "./styles.module.scss"
-
+interface IGetDateTransaction {
+  dateTypeFalse: { created_at: string }
+  dateTypeTrue: { created_at: string }
+}
 export const Summary = () => {
   const prev = queryClient.getQueryData<ITransaction[]>("list")
   const [entrada, setEntrada] = useState("R$ 0")
   const [saida, setSaida] = useState("R$ 0")
   const [total, setTotal] = useState(0)
- 
+  const [dateTransaction, setdateTransaction] = useState({ entry: "", withdrawal: "" })
+
   useEffect(() => {
     if (prev?.length > 0) {
       let inValue = 0, outValue = 0
@@ -18,14 +23,29 @@ export const Summary = () => {
         }
         return outValue = outValue + item.price
       })
-      
-      let inV =new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(inValue/100)
+
+      let inV = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(inValue / 100)
       setEntrada(inV)
-      let out =new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(outValue/100)
+      let out = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(outValue / 100)
       setSaida(out)
       setTotal((inValue - outValue) / 100)
     }
   }, [prev])
+  useEffect(() => {
+    getDateTrans()
+  }, [])
+  const getDateTrans = async () => {
+    const { dateTypeFalse, dateTypeTrue } = await getDateTransaction() as IGetDateTransaction
+    setdateTransaction({
+      entry: new Date(dateTypeTrue.created_at).toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "long",
+      }), withdrawal: new Date(dateTypeFalse.created_at).toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "long",
+      })
+    })
+  }
   return (
     <div className={styles.container}>
       <div>
@@ -34,7 +54,7 @@ export const Summary = () => {
           <img src="/images/income.svg" alt="Entradas" />
         </header>
         <strong className={styles.deposit}>{entrada}</strong>
-        <label>Ultima entrada dia 13</label>
+        <label>Ultima entrada dia {dateTransaction.entry}</label>
       </div>
       <div>
         <header>
@@ -42,9 +62,9 @@ export const Summary = () => {
           <img src="/images/outcome.svg" alt="Saidas" />
         </header>
         <strong className={styles.withraw}>- {saida}</strong>
-        <label>Ultima saida dia 13</label>
+        <label>Ultima saida dia {dateTransaction.withdrawal}</label>
       </div>
-      <div className={styles.total} style={total< 0 ? {background:"var(--red)", color:"var(--shape)"}: {}}>
+      <div className={styles.total} style={total < 0 ? { background: "var(--red)", color: "var(--shape)" } : {}}>
         <header>
           <p>Total</p>
           <img src="/images/total.svg" alt="Total" />
