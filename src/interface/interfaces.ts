@@ -1,5 +1,3 @@
-
-
 export interface ITransaction{
     id?: string
     title: string
@@ -12,7 +10,7 @@ export interface ITable{
     handleTransaction: (e:ITransaction)=>void
   }
   export interface IValuesTransactionModal {
-    id: Number
+    id?: Number
     title: string
     price: string
     description: string

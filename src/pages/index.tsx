@@ -1,4 +1,5 @@
 
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import authLogin from "../services/auth/authLogin";
@@ -10,7 +11,7 @@ export default function Home() {
   useEffect(() => {
     redirect()
   }, [])
-
+  
   const redirect = async () => {
     const session = supabase.auth.session()
     if (session?.expires_at < new Date().getTime()) {
@@ -22,6 +23,9 @@ export default function Home() {
   
   return (
     <>
+     <Head>
+      <title>Clinifisio</title>
+    </Head>
       <main className="__main">
         <img src="/images/logo.png" alt="" />
       </main>

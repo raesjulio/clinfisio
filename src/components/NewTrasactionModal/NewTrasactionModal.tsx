@@ -1,21 +1,15 @@
 
 import { ChangeEvent, FormEvent, useState } from "react"
 import ReactModal from "react-modal"
-import { ITransaction } from "../../interface/interfaces"
-import { api } from "../../services/api"
-import { queryClient } from "../../services/queryClient"
+import {  IValuesTransactionModal } from "../../interface/interfaces"
+import setTransaction from "../../services/setTransaction"
 import { Spinner } from "../Spinner/Spinner"
 import styles from "./styles.module.scss"
 interface Props {
     isOpen: boolean
     onRequestClose: () => void
 }
-interface IValuesTransactionModal {
-    title: string
-    price: string
-    description: string
-    type: boolean
-}
+
 const initialValues = () => {
     return {
         title: '',
@@ -35,8 +29,8 @@ export const NewTrasactionModal = (props: Props) => {
 
     const handleCreateNewTransaction = async (e: FormEvent) => {
         e.preventDefault()
-        if (values.title==="" || values.price ==="") {
-           setValueIsEmpty(true)
+        if (values.title === "" || values.price === "") {
+            setValueIsEmpty(true)
             return
         }
         // setIsOpen(true)
@@ -45,25 +39,21 @@ export const NewTrasactionModal = (props: Props) => {
             price: values.price.replace(/[^0-9]/g, ''),
             type: type,
         }
-        let arrayTransaction = queryClient.getQueryData<ITransaction[]>("list")
-        const response = await api
-            .post("/newtransaction", objSend)
-            .then(item => item.data)
-            .catch(() => setError(true))
+        const response = setTransaction(objSend)
+       
         if (response) {
-            arrayTransaction = [...arrayTransaction, response[0]]
-            queryClient.setQueryData("list", arrayTransaction)
             setValues(initialValues)
             closeSpinner()
             return props.onRequestClose()
         }
+        return setError(true)
     }
-    const closeSpinner =()=>{
+    const closeSpinner = () => {
         setIsOpen(false)
     }
     const onChangeInputs = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target
-        if (values.title!== "") {
+        if (values.title !== "") {
             setValueIsEmpty(false)
 
         }
@@ -72,9 +62,9 @@ export const NewTrasactionModal = (props: Props) => {
         }
         setValues({ ...values, [name]: value })
     }
-    const onRequestClosed =()=>{
+    const onRequestClosed = () => {
         setValues(initialValues)
-return props.onRequestClose()
+        return props.onRequestClose()
     }
     return (
         <ReactModal
@@ -94,12 +84,12 @@ return props.onRequestClose()
                 <h2>Cadastar Transação</h2>
                 {error && <section className='__error'>
                     <h3>
-                       {"Erro ao cadastar transação"}
+                        {"Erro ao cadastar transação"}
                     </h3>
                 </section>}
                 {valueIsEmpty && <section className='__error'>
                     <h3>
-                       {"Preencha os campos de Titulo e Preço"}
+                        {"Preencha os campos de Titulo e Preço"}
                     </h3>
                 </section>}
                 <input

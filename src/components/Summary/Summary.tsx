@@ -1,3 +1,4 @@
+import Head from "next/head"
 import { useEffect, useState } from "react"
 import { ITransaction } from "../../interface/interfaces"
 import getDateTransaction from "../../services/getDateTransaction"
@@ -25,28 +26,39 @@ export const Summary = () => {
       })
 
       let inV = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(inValue / 100)
-      setEntrada(inV)
       let out = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(outValue / 100)
+      setEntrada(inV)
       setSaida(out)
       setTotal((inValue - outValue) / 100)
     }
   }, [prev])
   useEffect(() => {
+    if (prev?.length === 0) {
+      setEntrada("R$ 0")
+      setSaida("R$ 0")
+      setTotal(0)
+    }
+  }, [prev])
+  useEffect(() => {
     getDateTrans()
-  }, [])
+  }, [prev])
   const getDateTrans = async () => {
     const { dateTypeFalse, dateTypeTrue } = await getDateTransaction() as IGetDateTransaction
     setdateTransaction({
-      entry: new Date(dateTypeTrue.created_at).toLocaleDateString("pt-BR", {
+      entry: new Date(dateTypeTrue?.created_at).toLocaleDateString("pt-BR", {
         day: "2-digit",
         month: "long",
-      }), withdrawal: new Date(dateTypeFalse.created_at).toLocaleDateString("pt-BR", {
+      }), withdrawal: new Date(dateTypeFalse?.created_at).toLocaleDateString("pt-BR", {
         day: "2-digit",
         month: "long",
       })
     })
   }
-  return (
+ 
+  return (<>
+    <Head>
+      <title>Painel | Clinifisio</title>
+    </Head>
     <div className={styles.container}>
       <div>
         <header>
@@ -54,15 +66,19 @@ export const Summary = () => {
           <img src="/images/income.svg" alt="Entradas" />
         </header>
         <strong className={styles.deposit}>{entrada}</strong>
-        <label>Ultima entrada dia {dateTransaction.entry}</label>
+        {dateTransaction.entry === "Invalid Date" ? "" : <>
+          <label>Ultima entrada dia {dateTransaction.entry}</label>
+        </>}
       </div>
       <div>
         <header>
           <p>Saidas</p>
           <img src="/images/outcome.svg" alt="Saidas" />
         </header>
-        <strong className={styles.withraw}>- {saida}</strong>
-        <label>Ultima saida dia {dateTransaction.withdrawal}</label>
+        <strong className={styles.withraw}>{saida}</strong>
+        {dateTransaction.withdrawal === "Invalid Date" ? "" : <>
+          <label>Ultima saida dia {dateTransaction.withdrawal}</label>
+        </>}
       </div>
       <div className={styles.total} style={total < 0 ? { background: "var(--red)", color: "var(--shape)" } : {}}>
         <header>
@@ -70,8 +86,9 @@ export const Summary = () => {
           <img src="/images/total.svg" alt="Total" />
         </header>
         <strong>{new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(total)}</strong>
-        <label>01 à 15 de abril</label>
+        {/* <label>01 à 15 de abril</label> */}
       </div>
     </div>
+  </>
   )
 }

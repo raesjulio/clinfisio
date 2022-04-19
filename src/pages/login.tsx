@@ -1,28 +1,28 @@
 import { useRouter } from 'next/router';
-import React, { ChangeEvent, FormEvent, FormEventHandler, useCallback, useEffect, useMemo, useState } from 'react'
-import ReactModal from 'react-modal';
+import React, { ChangeEvent, FormEvent, useState } from 'react'
 import { Spinner } from '../components/Spinner/Spinner';
-import { api } from '../services/api'
 import { supabase } from '../services/supabase';
+import Head from "next/head";
+
 interface IValuesLogin {
     email: string
     password: string
 }
 export default function Login() {
     const router = useRouter();
-    const [values, setValues] = useState<IValuesLogin>({email: "", password:""})
+    const [values, setValues] = useState<IValuesLogin>({ email: "", password: "" })
     const [isOpen, setIsOpen] = useState(false)
-    const [error, setError]= useState(false)
+    const [error, setError] = useState(false)
 
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if (values?.email ==="" || values.password ==="") {
+        if (values?.email === "" || values.password === "") {
             setError(true)
 
             return
         }
         setIsOpen(true)
-       
+
         const { user, session, error } = await supabase.auth.signIn(values)
         console.log(user, session, error);
 
@@ -40,16 +40,19 @@ export default function Login() {
         });
 
     }
-    const onChangeValues =(e:ChangeEvent<HTMLInputElement>)=>{
+    const onChangeValues = (e: ChangeEvent<HTMLInputElement>) => {
 
         setValues({ ...values, [e.target.name]: e.target.value })
     }
-    return (
+    return (<>
+        <Head>
+            <title>Login | Clinifisio</title>
+        </Head>
         <main className='__login'>
             <div>
                 <img src="/images/logo.png" alt="" />
             </div>
-         
+
             <form onSubmit={handleLogin} >
                 <input
                     value={values?.email}
@@ -65,15 +68,16 @@ export default function Login() {
                     onChange={onChangeValues}
                     type="password"
                     placeholder='Senha' />
-                       {error&&  <section className='__error'>
-                <h3>
-                    Credenciais Invalidas
-                </h3>
-            </section>}
+                {error && <section className='__error'>
+                    <h3>
+                        Credenciais Invalidas
+                    </h3>
+                </section>}
                 <button type='submit'>Entrar</button>
             </form>
-         
+
             <Spinner isOpen={isOpen} />
         </main>
+    </>
     )
 }
