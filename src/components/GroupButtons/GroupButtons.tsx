@@ -1,6 +1,6 @@
 
-import React, { ChangeEvent, useEffect, useState } from 'react'
-import { ITransaction } from '../../interface/interfaces'
+import React, {   useState } from 'react'
+
 import { queryClient } from '../../services/queryClient'
 import { supabase } from '../../services/supabase'
 import { Spinner } from '../Spinner/Spinner'
@@ -16,7 +16,6 @@ export const GroupButtons = () => {
         setTimeout(() => {
             setShowSpinner(false)
         }, 3000);
-
     }
     const [valueGroup, setValueGroup] = useState(1)
     const [showSpinner, setShowSpinner] = useState(false)
