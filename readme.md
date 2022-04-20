@@ -94,5 +94,14 @@ yarn dev
 * [Sass](https://sass-lang.com/);
 * [Supabase](https://supabase.com/);
 
-# Demostração  
+# Demostração 
+> ## Web e Mobile
 
+## LOGIN
+![alt_txt](https://github.com/raesjulio/clinfisio/blob/441598c0b9ddfc9df7f453021d0c0e6ac1fbe8fe/images/login.png)
+## PAINEL
+![alt_txt](https://github.com/raesjulio/clinfisio/blob/441598c0b9ddfc9df7f453021d0c0e6ac1fbe8fe/images/painel.png)
+## NOVA TRANSAÇÃO
+![alt_txt](https://github.com/raesjulio/clinfisio/blob/441598c0b9ddfc9df7f453021d0c0e6ac1fbe8fe/images/nova-transa%C3%A7%C3%A3o.png)
+## INFORMAÇÃO DA TRANSAÇÃO
+![alt_txt](https://github.com/raesjulio/clinfisio/blob/441598c0b9ddfc9df7f453021d0c0e6ac1fbe8fe/images/info-transa%C3%A7%C3%A3o.png)
