@@ -4,7 +4,7 @@
 
 # Descrição
 
-Aplicação tem como objetivo registra todas entradas e saidas dos valores, tendo um filtro de dias, mês e semana e controle de acesso por autenticação de email e senha.
+Aplicação tem como objetivo registra todas entradas e saidas do caixa da empresa, tendo um filtro de dias, mês e semana e controle de acesso por autenticação de email e senha.
 
 # Instalação
 
